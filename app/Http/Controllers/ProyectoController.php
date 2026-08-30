@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Proyecto;
 use League\Uri\StringCoercionMode;
+use App\DTOs\ApiResponseDTO;
 
 class ProyectoController extends Controller
 {
@@ -40,39 +41,97 @@ class ProyectoController extends Controller
         return redirect()->route('proyectos.index');
     }
 
-    public function show(Proyecto $proyecto) #muestra un proyecto específico
+    public function show ($proyecto) #muestra un proyecto específico
     {
+        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
+
+        if (!$foundproyecto) {
+            $response = new ApiResponseDTO(
+                404,
+                'El id de proyecto no existe',
+                $proyecto
+            );
+            return response()->json($response, 200);
+        }
+
+        $response = new ApiResponseDTO(200, 'Proyecto encontrado', $foundproyecto);
+
         return view('proyectos.show')
-            ->with('proyecto', $proyecto); #se pasa el proyecto específico a la vista
+            ->with('response', $response); #se pasa el proyecto específico a la vista
     }
 
-    public function edit(Proyecto $proyecto) #muestra el formulario para editar un proyecto específico
+    public function edit($proyecto) #muestra el formulario para editar un proyecto específico
     {
+        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
+
+        if (!$foundproyecto) {
+            $response = new ApiResponseDTO(
+                404,
+                'El id de proyecto no existe',
+                $proyecto
+            );
+            return response()->json($response, 200);
+        }
+
         return view('proyectos.edit')
-            ->with('proyecto', $proyecto); #se pasa el proyecto específico a la vista
+            ->with('proyecto', $foundproyecto); #se pasa el proyecto específico a la vista
     }
 
-    public function update(Request $request, Proyecto $proyecto) #actualiza un proyecto específico con los datos enviados desde el formulario de edición
+    public function update(Request $request, $proyecto) #actualiza un proyecto específico con los datos enviados desde el formulario de edición
     {
-        $validated = $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'fecha_inicio' => ['required', 'date'],
-            'estado' => ['required', 'string', 'in:pendiente,en progreso,completado'],
-            'responsable' => ['required', 'string', 'max:255'],
-            'monto' => ['required', 'numeric', 'min:0'],
-        ]);
+        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
 
-        $proyecto->update($validated);
+        if (!$foundproyecto) {
+            $response = new ApiResponseDTO(
+                404,
+                'El id de proyecto no existe',
+                $proyecto
+            );
+            return response()->json($response, 200);
+        }
 
-        return redirect()
-            ->route('proyectos.show', $proyecto)
-            ->with('success', 'Proyecto actualizado correctamente.');
+        try {
+            $validated = $request->validate([
+                'nombre' => ['required', 'string', 'max:255'],
+                'fecha_inicio' => ['required', 'date'],
+                'estado' => ['required', 'string', 'in:pendiente,en progreso,completado'],
+                'responsable' => ['required', 'string', 'max:255'],
+                'monto' => ['required', 'numeric', 'min:0'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $response = new ApiResponseDTO(
+                422,
+                'Los datos proporcionados no son válidos',
+                $e->errors()
+            );
+            return response()->json($response, 422);
+        }
+
+        $foundproyecto->update($validated);
+
+        $response = new ApiResponseDTO(
+                200,
+                'Proyecto actualizado correctamente',
+                $foundproyecto
+            );
+            return response()->json($response, 200);
     }
 
-    public function destroy(Proyecto $proyecto) #elimina un proyecto específico de la base de datos
+    public function destroy($proyecto) #elimina un proyecto específico de la base de datos
     {
-        $proyecto->delete();
-        return redirect()->route('proyectos.index');
+        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
+
+        if (!$foundproyecto) {
+            $response = new ApiResponseDTO(
+                404,
+                'El id de proyecto no existe',
+                $proyecto
+            );
+            return response()->json($response, 200);
+        }
+
+        $foundproyecto->delete();
+        return response()->noContent(); //response 204
     }
 
     function calcularUF(string $fecha): float #simula la obtención del valor de la UF para una fecha específica
@@ -87,9 +146,20 @@ class ProyectoController extends Controller
         return $valoresUF[$fecha] ?? 0.0;
     }
 
-    public function confirmarEliminar(Proyecto $proyecto)
+    public function confirmarEliminar($proyecto)
     {
+        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
+
+        if (!$foundproyecto) {
+            $response = new ApiResponseDTO(
+                404,
+                'El id de proyecto no existe',
+                $proyecto
+            );
+            return response()->json($response, 200);
+        }
+
         return view('proyectos.delete')
-            ->with('proyecto', $proyecto);
+            ->with('proyecto', $foundproyecto);
     }
 }

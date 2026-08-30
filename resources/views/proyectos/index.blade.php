@@ -6,7 +6,6 @@
 
     <div class="projects-container">
 
-        ```
         <!-- Encabezado de la sección -->
         <div class="projects-header">
 
@@ -62,6 +61,9 @@
                         <a href="{{ route('proyectos.confirmarEliminar', $proyecto) }}" class="btn-secundario">
                             + Eliminar Proyecto
                         </a>
+                         <a href="{{ route('proyectos.show', $proyecto) }}" class="btn-secundario">
+                            + Ver Detalles
+                        </a>
                     </div>
 
                 </div>
@@ -82,7 +84,6 @@
             @endforelse
 
         </div>
-        ```
 
     </div>
 

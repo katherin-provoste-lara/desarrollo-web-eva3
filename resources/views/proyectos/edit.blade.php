@@ -86,7 +86,7 @@ Muestra la información actual para poder actualizarla. -->
             </div>
         @endif
 
-        <form action="{{ route('proyectos.update', $proyecto->id) }}" method="POST">
+        <form id="form-update" action="{{ route('proyectos.update', $proyecto->id) }}" method="POST">
 
             @csrf
 
@@ -145,7 +145,25 @@ Muestra la información actual para poder actualizarla. -->
 
         </form>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('form-update').addEventListener('submit', async function(e) {
+                    e.preventDefault();
 
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (response.status === 200) {
+                        window.location.href = "{{ route('proyectos.show', $proyecto->id) }}";
+                    }
+                });
+            });
+        </script>
 
     </div>
 

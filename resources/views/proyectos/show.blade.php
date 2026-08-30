@@ -55,32 +55,32 @@ Sirve para consultar los detalles de un proyecto específico. -->
 
         <p>
             <strong>ID:</strong>
-            {{ $proyecto->id }}
+            {{ $response->data->id }}
         </p>
 
         <p>
             <strong>Nombre:</strong>
-            {{ $proyecto->nombre }}
+            {{ $response->data->nombre }}
         </p>
 
         <p>
             <strong>Fecha Inicio:</strong>
-            {{ $proyecto->fecha_inicio }}
+            {{ $response->data->fecha_inicio }}
         </p>
 
         <p>
             <strong>Estado:</strong>
-            {{ $proyecto->estado }}
+            {{ $response->data->estado }}
         </p>
 
         <p>
             <strong>Responsable:</strong>
-            {{ $proyecto->responsable }}
+            {{ $response->data->responsable }}
         </p>
 
         <p>
             <strong>Monto:</strong>
-            $ {{ $proyecto->monto }}
+            $ {{ $response->data->monto }}
         </p>
 
         <a href="{{ route('proyectos.index') }}" class="boton">

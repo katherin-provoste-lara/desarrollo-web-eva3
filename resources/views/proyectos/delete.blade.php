@@ -123,7 +123,7 @@ Muestra la información del proyecto seleccionado antes de eliminarlo.-->
 
 
 
-        <form action="{{ route('proyectos.destroy', $proyecto) }}" method="POST">
+        <form id="form-eliminar" action="{{ route('proyectos.destroy', $proyecto) }}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit">Sí, eliminar</button>
@@ -131,7 +131,28 @@ Muestra la información del proyecto seleccionado antes de eliminarlo.-->
 
         <a href="{{ route('proyectos.index') }}">Cancelar</a>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('form-eliminar').addEventListener('submit', async function(e) {
+                    e.preventDefault();
 
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (response.status === 204) {
+                        window.location.href = "{{ route('proyectos.index') }}";
+                    } else {
+                        const data = await response.json();
+                        alert(data.message);
+                    }
+                });
+            });
+        </script>
 
     </div>
 
