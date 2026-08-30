@@ -4,15 +4,11 @@ namespace App\Models;
 
 use App\Models\Proyecto;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['nombre', 'correo', 'clave'])]
-#[Hidden(['clave', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -21,6 +17,16 @@ class User extends Authenticatable
     // Indica que este modelo utiliza la tabla "users".
     protected $table = 'users';
 
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
     /*
      * Define el tratamiento que tendrá la clave.
      * Laravel aplicará hashing automáticamente.
@@ -28,7 +34,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'clave' => 'hashed',
+            'password' => 'hashed',
+            'email_verified_at' => 'datetime',
         ];
     }
 
@@ -38,7 +45,7 @@ class User extends Authenticatable
      */
     public function getAuthPassword(): string
     {
-        return $this->clave;
+        return $this->password;
     }
 
     /*
@@ -48,4 +55,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Proyecto::class, 'created_by');
     }
+
 }

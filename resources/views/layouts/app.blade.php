@@ -319,10 +319,16 @@
             Iniciar sesión
         </a>
 
-        <a href="/registro">
+        <a href="/register">
             Registrarse
         </a>
 
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+    @csrf
+    <button type="submit" class="enlace-logout">
+        Cerrar Sesión
+    </button>
+</form>
     </div>
 
 </nav>
