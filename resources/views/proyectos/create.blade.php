@@ -1,134 +1,108 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Crear Proyecto')
 
-    <title>Crear Proyecto</title>
+@section('content')
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
+    <div class="projects-container">
 
-        h1 {
-            text-align: center;
-        }
+        <div class="projects-header">
+            <div>
+                <h1>Crear Nuevo Proyecto</h1>
+                <p>Ingresa los datos del nuevo proyecto.</p>
+            </div>
+        </div>
 
-        form {
-            width: 50%;
-            margin: auto;
-        }
+        <div class="project-card">
 
-        label {
-            font-weight: bold;
-        }
+            @if ($errors->any())
+                <div style="background: #fee2e2; color: #dc2626; padding: 12px; margin-bottom: 20px; border-radius: 7px;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        input,
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
+            <form action="{{ route('proyectos.store') }}" method="POST">
 
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-    </style>
-</head>
+                @csrf
 
-<!-- Esta vista contiene el formulario para ingresar un nuevo proyecto.
-Los datos ingresados son enviados al controlador para ser procesados. -->
+                <div class="form-group">
+                    <label for="nombre">Nombre del proyecto</label>
 
-<body>
+                    <input
+                        type="text"
+                        id="nombre"
+                        name="nombre"
+                        value="{{ old('nombre') }}"
+                        placeholder="Ingrese nombre del proyecto"
+                        required
+                    >
+                </div>
 
-    <h1>Crear Nuevo Proyecto</h1>
+                <div class="form-group">
+                    <label for="fecha_inicio">Fecha de inicio</label>
 
-    <form action="{{ route('proyectos.store') }}" method="POST">
+                    <input
+                        type="date"
+                        id="fecha_inicio"
+                        name="fecha_inicio"
+                        value="{{ old('fecha_inicio') }}"
+                        required
+                    >
+                </div>
 
-        @csrf
+                <div class="form-group">
+                    <label for="estado">Estado</label>
 
-        <label for="nombre">
-            Nombre del proyecto:
-        </label>
+                    <select
+                        id="estado"
+                        name="estado"
+                        required
+                    >
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en progreso">En progreso</option>
+                        <option value="completado">Completado</option>
+                    </select>
+                </div>
 
-        <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            placeholder="Ingrese nombre del proyecto"
-            required
-        >
+                <div class="form-group">
+                    <label for="responsable">Responsable</label>
 
-        <label for="fecha_inicio">
-            Fecha de inicio:
-        </label>
+                    <input
+                        type="text"
+                        id="responsable"
+                        name="responsable"
+                        value="{{ old('responsable') }}"
+                        placeholder="Ingrese responsable"
+                        required
+                    >
+                </div>
 
-        <input
-            type="date"
-            id="fecha_inicio"
-            name="fecha_inicio"
-            required
-        >
+                <div class="form-group">
+                    <label for="monto">Monto</label>
 
-        <label for="estado">
-            Estado:
-        </label>
+                    <input
+                        type="number"
+                        id="monto"
+                        name="monto"
+                        value="{{ old('monto') }}"
+                        placeholder="Ingrese monto"
+                        min="0"
+                        required
+                    >
+                </div>
 
-        <select
-            id="estado"
-            name="estado"
-            required
-        >
+                <button type="submit" class="btn-principal">
+                    Guardar Proyecto
+                </button>
 
-            <option value="pendiente">
-                Pendiente
-            </option>
+            </form>
 
-            <option value="en progreso">
-                En progreso
-            </option>
+        </div>
 
-            <option value="completado">
-                Completado
-            </option>
+    </div>
 
-        </select>
-
-        <label for="responsable">
-            Responsable:
-        </label>
-
-        <input
-            type="text"
-            id="responsable"
-            name="responsable"
-            placeholder="Ingrese responsable"
-            required
-        >
-
-        <label for="monto">
-            Monto:
-        </label>
-
-        <input
-            type="number"
-            id="monto"
-            name="monto"
-            placeholder="Ingrese monto"
-            required
-        >
-
-        <button type="submit">
-            Guardar Proyecto
-        </button>
-
-    </form>
-
-</body>
-
-</html>
+@endsection

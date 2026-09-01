@@ -4,7 +4,6 @@
 
 @section('content')
 
-    ```
     <div class="formulario">
 
         <!-- Encabezado del formulario -->
@@ -251,6 +250,5 @@
             }
         }
     </script>
-    ```
 
 @endsection

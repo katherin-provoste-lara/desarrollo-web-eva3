@@ -6,7 +6,6 @@
 
     <div class="auth-card">
 
-        ```
         <div class="auth-header">
             <h1>Crear cuenta</h1>
             <p>Regístrate para comenzar a gestionar tus proyectos.</p>
@@ -61,7 +60,6 @@
             <a href="/login">Inicia sesión</a>
         </p>
     </div>
-    ```
 
     </div>
 
