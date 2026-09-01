@@ -15,9 +15,9 @@
             </div>
 
             <!--
-            Este botón quedará preparado para enlazar
-            posteriormente con la ruta de creación de proyectos.
-        -->
+                        Este botón quedará preparado para enlazar
+                        posteriormente con la ruta de creación de proyectos.
+                    -->
             <a href="{{ route('proyectos.create') }}" class="btn-principal">
                 + Nuevo Proyecto
             </a>
@@ -55,15 +55,21 @@
                             ${{ number_format($proyecto->monto, 0, ',', '.') }}
                         </p>
 
-                        <a href="{{ route('proyectos.edit', $proyecto) }}" class="btn-secundario">
-                            + Editar Proyecto
-                        </a>
-                        <a href="{{ route('proyectos.confirmarEliminar', $proyecto) }}" class="btn-secundario">
-                            + Eliminar Proyecto
-                        </a>
-                         <a href="{{ route('proyectos.show', $proyecto) }}" class="btn-secundario">
-                            + Ver Detalles
-                        </a>
+                        <div class="project-actions">
+
+                            <a href="{{ route('proyectos.show', $proyecto) }}" class="btn-ver">
+                                Ver detalles
+                            </a>
+
+                            <a href="{{ route('proyectos.edit', $proyecto) }}" class="btn-editar">
+                                Editar
+                            </a>
+
+                            <a href="{{ route('proyectos.confirmarEliminar', $proyecto) }}" class="btn-eliminar">
+                                Eliminar
+                            </a>
+
+                        </div>
                     </div>
 
                 </div>

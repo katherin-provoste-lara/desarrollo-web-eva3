@@ -12,53 +12,86 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #1f2937;
         }
-
 
         .contenedor {
-
-            width: 500px;
-            margin: auto;
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 10px;
-
+            width: 100%;
+            max-width: 650px;
+            margin: 20px auto;
+            padding: 30px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
-
 
         h1 {
-
+            margin: 0 0 25px;
             text-align: center;
-
+            color: #1e3a8a;
+            font-size: 26px;
         }
-
 
         label {
-
             display: block;
-            margin-top: 15px;
+            margin-top: 18px;
+            margin-bottom: 7px;
             font-weight: bold;
-
+            color: #1f2937;
         }
 
-
-        input {
-
+        input,
+        select {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-
+            padding: 12px;
+            margin-top: 0;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 15px;
+            background: #f9fafb;
+            color: #1f2937;
+            outline: none;
         }
 
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
 
         button {
-
-            margin-top: 20px;
-            padding: 10px 20px;
+            display: block;
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s ease;
+        }
 
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 600px) {
+            .contenedor {
+                margin: 10px auto;
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
         }
     </style>
 

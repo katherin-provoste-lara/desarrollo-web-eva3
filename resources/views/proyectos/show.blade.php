@@ -1,55 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Detalle Proyecto')
 
-    <title>Detalle Proyecto</title>
+@section('content')
 
-    <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
 
-        .contenedor {
-            width: 500px;
-            margin: auto;
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 10px;
-        }
+    <!-- Esta vista muestra la información completa de un proyecto seleccionado.
+                                Sirve para consultar los detalles de un proyecto específico. -->
 
-        h1 {
-            text-align: center;
-        }
 
-        p {
-            font-size: 18px;
-        }
-
-        .boton {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 15px;
-            background-color: #eeeeee;
-            text-decoration: none;
-            color: black;
-            border-radius: 5px;
-        }
-
-    </style>
-
-</head>
-
-<!-- Esta vista muestra la información completa de un proyecto seleccionado.
-Sirve para consultar los detalles de un proyecto específico. -->
-
-<body>
-
-    <div class="contenedor">
+    <div class="detalle-proyecto">
 
         <h1>Detalle del Proyecto</h1>
 
@@ -89,6 +50,4 @@ Sirve para consultar los detalles de un proyecto específico. -->
 
     </div>
 
-</body>
-
-</html>
+@endsection
