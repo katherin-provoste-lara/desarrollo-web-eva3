@@ -9,13 +9,26 @@ use App\DTOs\ApiResponseDTO;
 
 class ProyectoController extends Controller
 {
-    public function index() #muestra todos los proyectos
+    public function index() // muestra todos los proyectos
     {
-        $valorUF = $this->calcularUF('2026-07-15'); #Simulación de obtener el valor de la UF
         $proyectos = Proyecto::all();
 
+        // Respuesta para la API
+        if (request()->is('api/*')) {
+            $response = new ApiResponseDTO(
+                200,
+                'Proyectos obtenidos correctamente',
+                $proyectos
+            );
+
+            return response()->json($response, 200);
+        }
+
+        // Respuesta para la página web
+        $valorUF = $this->calcularUF('2026-07-15');
+
         return view('proyectos.index')
-            ->with('proyectos', $proyectos) #se pasa la lista de proyectos a la vista
+            ->with('proyectos', $proyectos)
             ->with('valorUF', $valorUF);
     }
 
@@ -34,14 +47,25 @@ class ProyectoController extends Controller
             'monto' => ['required', 'numeric', 'min:0'],
         ]);
 
-        Proyecto::create([
+        $proyecto = Proyecto::create([
             ...$validated,
-            'created_by' => auth()->id(),
+            'created_by' => 1,
         ]);
+
+        if ($request->is('api/*')) {
+            $response = new ApiResponseDTO(
+                201,
+                'Proyecto creado correctamente',
+                $proyecto
+            );
+
+            return response()->json($response, 201);
+        }
+
         return redirect()->route('proyectos.index');
     }
 
-    public function show ($proyecto) #muestra un proyecto específico
+    public function show($proyecto) #muestra un proyecto específico
     {
         $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
 
@@ -110,11 +134,11 @@ class ProyectoController extends Controller
         $foundproyecto->update($validated);
 
         $response = new ApiResponseDTO(
-                200,
-                'Proyecto actualizado correctamente',
-                $foundproyecto
-            );
-            return response()->json($response, 200);
+            200,
+            'Proyecto actualizado correctamente',
+            $foundproyecto
+        );
+        return response()->json($response, 200);
     }
 
     public function destroy($proyecto) #elimina un proyecto específico de la base de datos
