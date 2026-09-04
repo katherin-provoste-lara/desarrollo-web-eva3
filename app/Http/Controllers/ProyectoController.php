@@ -13,22 +13,22 @@ class ProyectoController extends Controller
     {
         $proyectos = Proyecto::all();
 
-        if (request()->expectsJson()) {
+        if (!$proyectos || $proyectos->isEmpty()) {
             $response = new ApiResponseDTO(
+                200,
+                'No existen proyectos en la base de datos',
+                []
+            );
+            return response()->json($response, 200);
+        }
+
+        $response = new ApiResponseDTO(
                 200,
                 'Proyectos obtenidos correctamente',
                 $proyectos
             );
 
-            return response()->json($response, 200);
-        }
-
-        // Respuesta para la página web
-        $valorUF = $this->calcularUF('2026-07-15');
-
-        return view('proyectos.index')
-            ->with('proyectos', $proyectos)
-            ->with('valorUF', $valorUF);
+        return response()->json($response, 200);
     }
 
     public function store(Request $request) // guarda un nuevo proyecto
@@ -53,20 +53,16 @@ class ProyectoController extends Controller
 
         $proyecto = Proyecto::create([
             ...$validated,
-            'created_by' => auth()->id(),
+            'created_by' => $request['created_by'],
         ]);
 
-        if ($request->expectsJson()) {
-            $response = new ApiResponseDTO(
+        $response = new ApiResponseDTO(
                 201,
                 'Proyecto creado correctamente',
                 $proyecto
             );
 
-            return response()->json($response, 201);
-        }
-
-        return redirect()->route('proyectos.index');
+        return response()->json($response, 201);
     }
 
     public function show($proyecto) #muestra un proyecto específico
@@ -79,31 +75,17 @@ class ProyectoController extends Controller
                 'El id de proyecto no existe',
                 $proyecto
             );
-            return response()->json($response, 200);
+            return response()->json($response, 404);
         }
 
-        $response = new ApiResponseDTO(200, 'Proyecto encontrado', $foundproyecto);
-
-        return view('proyectos.show')
-            ->with('response', $response); #se pasa el proyecto específico a la vista
+        $response = new ApiResponseDTO(
+            200,
+            'Proyecto encontrado',
+            $foundproyecto
+        );
+        return response()->json($response, 200);
     }
 
-    public function edit($proyecto) #muestra el formulario para editar un proyecto específico
-    {
-        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
-
-        if (!$foundproyecto) {
-            $response = new ApiResponseDTO(
-                404,
-                'El id de proyecto no existe',
-                $proyecto
-            );
-            return response()->json($response, 200);
-        }
-
-        return view('proyectos.edit')
-            ->with('proyecto', $foundproyecto); #se pasa el proyecto específico a la vista
-    }
 
     public function update(Request $request, $proyecto) #actualiza un proyecto específico con los datos enviados desde el formulario de edición
     {
@@ -115,7 +97,7 @@ class ProyectoController extends Controller
                 'El id de proyecto no existe',
                 $proyecto
             );
-            return response()->json($response, 200);
+            return response()->json($response, 404);
         }
 
         try {
@@ -155,39 +137,10 @@ class ProyectoController extends Controller
                 'El id de proyecto no existe',
                 $proyecto
             );
-            return response()->json($response, 200);
+            return response()->json($response, 404);
         }
 
         $foundproyecto->delete();
         return response()->noContent(); //response 204
-    }
-
-    function calcularUF(string $fecha): float #simula la obtención del valor de la UF para una fecha específica
-    {
-        #Valores de ejemplo por fechas
-        $valoresUF = [
-            '2026-07-01' => 38245.67,
-            '2026-07-15' => 38312.40,
-            '2026-08-01' => 38401.15,
-        ];
-
-        return $valoresUF[$fecha] ?? 0.0;
-    }
-
-    public function confirmarEliminar($proyecto)
-    {
-        $foundproyecto = Proyecto::find($proyecto); #Si el Id no existe debe retornar 404.
-
-        if (!$foundproyecto) {
-            $response = new ApiResponseDTO(
-                404,
-                'El id de proyecto no existe',
-                $proyecto
-            );
-            return response()->json($response, 200);
-        }
-
-        return view('proyectos.delete')
-            ->with('proyecto', $foundproyecto);
     }
 }
