@@ -13,8 +13,7 @@ class ProyectoController extends Controller
     {
         $proyectos = Proyecto::all();
 
-        // Respuesta para la API
-        if (request()->is('api/*')) {
+        if (request()->expectsJson()) {
             $response = new ApiResponseDTO(
                 200,
                 'Proyectos obtenidos correctamente',
@@ -32,27 +31,32 @@ class ProyectoController extends Controller
             ->with('valorUF', $valorUF);
     }
 
-    public function create() #muestra el formulario para crear un nuevo proyecto
+    public function store(Request $request) // guarda un nuevo proyecto
     {
-        return view('proyectos.create');
-    }
+        try {
+            $validated = $request->validate([
+                'nombre' => ['required', 'string', 'max:255'],
+                'fecha_inicio' => ['required', 'date'],
+                'estado' => ['required', 'string', 'in:pendiente,en progreso,completado'],
+                'responsable' => ['required', 'string', 'max:255'],
+                'monto' => ['required', 'numeric', 'min:0'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $response = new ApiResponseDTO(
+                422,
+                'Los datos proporcionados no son válidos',
+                $e->errors()
+            );
 
-    public function store(Request $request) #guarda un nuevo proyecto en la base de datos
-    {
-        $validated = $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'fecha_inicio' => ['required', 'date'],
-            'estado' => ['required', 'string', 'in:pendiente,en progreso,completado'],
-            'responsable' => ['required', 'string', 'max:255'],
-            'monto' => ['required', 'numeric', 'min:0'],
-        ]);
+            return response()->json($response, 422);
+        }
 
         $proyecto = Proyecto::create([
             ...$validated,
-            'created_by' => 1,
+            'created_by' => auth()->id(),
         ]);
 
-        if ($request->is('api/*')) {
+        if ($request->expectsJson()) {
             $response = new ApiResponseDTO(
                 201,
                 'Proyecto creado correctamente',
